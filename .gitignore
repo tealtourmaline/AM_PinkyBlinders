@@ -26,4 +26,4 @@ replay_pid*
 # Ignore gradle files
 .gradle/
 build/
-.idea
+.idea/
