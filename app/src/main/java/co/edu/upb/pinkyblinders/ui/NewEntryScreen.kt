@@ -1,5 +1,6 @@
 package co.edu.upb.pinkyblinders.ui.theme
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,7 +40,7 @@ fun Navbar() {
             .background(Color(0xFFFFC4EB))
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Image(
             painter = painterResource(id = R.drawable.volver),
@@ -50,7 +54,8 @@ fun Navbar() {
             painter = painterResource(id = R.drawable.logohorizontal),
             contentDescription = "Logo",
             modifier = Modifier
-                .height(24.dp)
+                .height(24.dp),
+
         )
     }
 }
@@ -64,31 +69,29 @@ fun NewEntryBodyContent() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFE4FA))
-            .padding(16.dp),
+            .background(Color(0xFFFFE4FA)),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
         // Navbar
         Navbar()
 
-        Spacer(modifier = Modifier.height(20.dp))
 
         // Título centrado
         Text(
+            modifier = Modifier.padding(16.dp),
             text = "Ingresa una nueva entrada",
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
             textAlign = TextAlign.Center,
-            fontSize = 35.sp,
-            fontWeight = FontWeight(400),
             fontFamily = LobsterTwoFont,
             color = Color(0xFFF61067)
         )
 
-        Spacer(modifier = Modifier.height(40.dp))
 
         // Campo de título
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
             Text(
                 text = "Titulo",
@@ -120,11 +123,10 @@ fun NewEntryBodyContent() {
             )
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
 
         // Campo de descripción
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
             Text(
                 text = "Descripcion",
@@ -142,7 +144,7 @@ fun NewEntryBodyContent() {
                 label = { Text("Cómo te sientes hoy, qué hiciste, cualquier cosa que quieras anotar") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
+                    .height(380.dp)
                     .border(
                         width = 1.dp,
                         color = Color(0xFFF61067),
@@ -156,7 +158,7 @@ fun NewEntryBodyContent() {
             )
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         // Botón "Aceptar"
         Box(
@@ -172,7 +174,7 @@ fun NewEntryBodyContent() {
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
-                .clickable(onClick = { /*TODO: Acción de aceptar*/ })
+                .clickable(onClick = { /*Funcionalidad de aceptar, tarea pendiente*/ })
         ) {
             Text(
                 text = "Aceptar",
@@ -189,5 +191,4 @@ fun NewEntryBodyContent() {
 @Composable
 fun NewEntryScreenPreview() {
     NewEntryScreen()
-}
 }
