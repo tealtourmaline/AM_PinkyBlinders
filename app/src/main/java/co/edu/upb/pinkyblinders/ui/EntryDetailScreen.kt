@@ -26,17 +26,25 @@ import androidx.compose.ui.unit.sp
 import co.edu.upb.pinkyblinders.R
 
 @Composable
-fun EntryDetailScreen() {
+fun EntryDetailScreen(titulo: String?, fecha: String?, descripcion: String?) {
     Scaffold {
-        EntryDetailBodyContent()
+        EntryDetailBodyContent(
+            titulo = titulo,
+            fecha = fecha,
+            descripcion = descripcion
+        )
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EntryDetailBodyContent() {
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
+fun EntryDetailBodyContent(fecha: String?,
+                           titulo: String?,
+                           descripcion: String?) {
+    val defaultFecha = "Fecha/de/entrada"
+    val defaultTitulo = "Título de la entrada"
+    val defaultDescripcion = "Este es un ejemplo de una entrada de diario. Aquí puedes escribir todo lo que te ha sucedido hoy, tus pensamientos y cómo te has sentido a lo largo del día. Este espacio está diseñado para que puedas reflexionar sobre tus experiencias, grandes o pequeñas, y sobre cómo estas te han impactado. Tal vez tu día ha sido tranquilo y has disfrutado de pequeños momentos de paz, o quizás ha sido más agitado, lleno de retos y emociones intensas. No importa qué tipo de día hayas tenido, este es un lugar seguro para desahogarte y expresar todo lo que llevas dentro.\n\nEste diario también puede ser un buen lugar para reflexionar sobre tus metas, lo que te gustaría alcanzar en los próximos días o semanas, y cómo te sientes con respecto a tu progreso. Tómate el tiempo para escribir con calma, sin prisa, y aprovecha este momento para conectar contigo mismo."
 
     Column(
         modifier = Modifier
@@ -53,7 +61,7 @@ fun EntryDetailBodyContent() {
         //Fecha
         Text(
             modifier = Modifier.padding(start = 16.dp),
-            text = "Fecha/de/entrada",
+            text = fecha ?: defaultFecha,
             color = Color(0xFFF61067),
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
@@ -71,7 +79,7 @@ fun EntryDetailBodyContent() {
         ) {
             // Título
             Text(
-                text = "Título de la entrada",
+                text = titulo ?: defaultTitulo,
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 fontFamily = LobsterTwoFont,
@@ -107,9 +115,7 @@ fun EntryDetailBodyContent() {
         //Texto de la entrada
         Text(
             modifier = Modifier.padding(25.dp),
-            text = "Este es un ejemplo de una entrada de diario. Aquí puedes escribir todo lo que te ha sucedido hoy, tus pensamientos y cómo te has sentido a lo largo del día. Este espacio está diseñado para que puedas reflexionar sobre tus experiencias, grandes o pequeñas, y sobre cómo estas te han impactado. Tal vez tu día ha sido tranquilo y has disfrutado de pequeños momentos de paz, o quizás ha sido más agitado, lleno de retos y emociones intensas. No importa qué tipo de día hayas tenido, este es un lugar seguro para desahogarte y expresar todo lo que llevas dentro.\n" +
-                    "\n" +
-                    "Este diario también puede ser un buen lugar para reflexionar sobre tus metas, lo que te gustaría alcanzar en los próximos días o semanas, y cómo te sientes con respecto a tu progreso. Tómate el tiempo para escribir con calma, sin prisa, y aprovecha este momento para conectar contigo mismo.",
+            text = descripcion ?: defaultDescripcion,
             fontWeight = FontWeight.Normal,
             fontSize = 19.sp,
         )
@@ -121,5 +127,5 @@ fun EntryDetailBodyContent() {
 @Preview(showBackground = true)
 @Composable
 fun EntryDetailScreenPreview() {
-    EntryDetailScreen()
+    EntryDetailScreen(titulo = null, fecha = null, descripcion = null)
 }
