@@ -30,15 +30,132 @@ import co.edu.upb.pinkyblinders.R
 
 @Composable
 fun ConfigScreen() {
+    var showConfirmationDialog by remember { mutableStateOf(false) }
+    var showSuccessDialog by remember { mutableStateOf(false) }
+
     Scaffold {
-        ConfigBodyContent()
+        ConfigBodyContent(
+            onDeleteDataClick = { showConfirmationDialog = true }
+        )
+    }
+
+    // Diálogo de confirmación
+    if (showConfirmationDialog) {
+        AlertDialogConfig(
+            onDismiss = { showConfirmationDialog = false },
+            onConfirm = {
+                showConfirmationDialog = false
+                showSuccessDialog = true
+            }
+        )
+    }
+
+    // Diálogo de éxito
+    if (showSuccessDialog) {
+        SuccessDialogConfig(onDismiss = {
+            showSuccessDialog = false
+        })
     }
 }
+@Composable
+fun AlertDialogConfig(
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        containerColor = Color(0xFFFFC4EB),
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
 
+                // Texto de confirmación
+                Text(
+                    text = "¿Estás seguro de que quieres eliminar todos tus datos?",
+                    color = Color(0xFFF61067),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+            }
+        },
+        confirmButton = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly // Espacio uniforme entre los botones
+            ) {
+                // Botón "SÍ"
+                Box(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(80.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFFFFC4EB),
+                                    Color(0xFFF61067)
+                                )
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .clickable {
+                            onConfirm()
+                        }
+                ) {
+                    Text(
+                        text = "SÍ",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(16.dp)) // Espacio entre los botones
+
+                // Botón "NO"
+                Box(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(80.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFFFFC4EB),
+                                    Color(0xFFF61067)
+                                )
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .clickable { onDismiss() }
+                ) {
+                    Text(
+                        text = "NO",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 20.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfigBodyContent() {
+fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
     var nombre by remember { mutableStateOf("") }
     var pinactual by remember { mutableStateOf("") }
     var pinnuevo by remember { mutableStateOf("") }
@@ -50,11 +167,8 @@ fun ConfigBodyContent() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        // Navbar
         Navbar()
 
-
-        // Título centrado
         Text(
             modifier = Modifier.padding(16.dp),
             text = "Tu configuración",
@@ -65,8 +179,6 @@ fun ConfigBodyContent() {
             color = Color(0xFFF61067)
         )
 
-
-        // Campo de título
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
@@ -99,21 +211,19 @@ fun ConfigBodyContent() {
                 ),
                 trailingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.editar),  // Asegúrate de que este ícono esté en tu carpeta drawable
+                        painter = painterResource(id = R.drawable.editar),
                         contentDescription = "Editar",
                         modifier = Modifier
                             .clickable { /* Acción de editar */ }
-                            .size(24.dp),  // Tamaño del ícono
-                        tint = Color(0xFFF61067)  // Color del ícono
+                            .size(24.dp),
+                        tint = Color(0xFFF61067)
                     )
                 }
             )
-
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Botón "Aceptar"
         Box(
             modifier = Modifier
                 .height(40.dp)
@@ -140,17 +250,13 @@ fun ConfigBodyContent() {
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        //subtítulo: cambiar clave
-
         Text(
             text = "Cambiar clave",
             color = Color(0xFFF61067),
             fontWeight = FontWeight.ExtraBold,
             fontSize = 20.sp,
             modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-
-            )
-        //Apartado para que el usuario ingrese su clave actual
+        )
 
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
@@ -184,6 +290,7 @@ fun ConfigBodyContent() {
                 ),
             )
         }
+
         Column(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
         ) {
@@ -200,7 +307,7 @@ fun ConfigBodyContent() {
             TextField(
                 value = pinnuevo,
                 onValueChange = { pinnuevo = it },
-                label = { Text("Ingresa aquí tu clave actual") },
+                label = { Text("Ingresa aquí tu clave nueva") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp)
@@ -218,7 +325,6 @@ fun ConfigBodyContent() {
         }
         Spacer(modifier = Modifier.height(12.dp))
 
-        // Botón "Aceptar" para la clave
         Box(
             modifier = Modifier
                 .height(40.dp)
@@ -242,9 +348,9 @@ fun ConfigBodyContent() {
                 modifier = Modifier.align(Alignment.Center)
             )
         }
+
         Spacer(modifier = Modifier.height(45.dp))
 
-        // Botón "Borrar todos los datos"
         Box(
             modifier = Modifier
                 .height(120.dp)
@@ -258,7 +364,7 @@ fun ConfigBodyContent() {
                     ),
                     shape = RoundedCornerShape(10.dp)
                 )
-                .clickable(onClick = { /*Funcionalidad de aceptar, tarea pendiente*/ })
+                .clickable(onClick = onDeleteDataClick)
         ) {
             Text(
                 text = "Borrar todos tus datos",
@@ -272,7 +378,55 @@ fun ConfigBodyContent() {
     }
 }
 
-@Preview(showBackground = true)
+@Composable
+fun SuccessDialogConfig(onDismiss: () -> Unit) {
+    AlertDialog(
+        containerColor = Color(0xFFFFC4EB),
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly // Espacio uniforme entre los botones
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(170.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFFFFC4EB),
+                                    Color(0xFFF61067)
+                                )
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .clickable(onClick = onDismiss)
+                ) {
+                    Text(
+                        text = "Aceptar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        },
+        text = {
+            Text(
+                text = "Datos borrados exitosamente",
+                color = Color(0xFFF61067),
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+    )
+}
+@Preview(showBackground = true, name = "ConfigScreenPreview")
 @Composable
 fun ConfigScreenPreview() {
     ConfigScreen()
