@@ -13,6 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import co.edu.upb.pinkyblinders.ui.Navbar
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color

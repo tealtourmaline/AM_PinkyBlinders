@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.upb.pinkyblinders.R
+import co.edu.upb.pinkyblinders.ui.Navbar
 
 @Composable
 fun NewEntryScreen() {
@@ -37,33 +38,7 @@ fun NewEntryScreen() {
         }
     }
 }
-@Composable
-fun Navbar() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFFFC4EB))
-            .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.volver),
-            contentDescription = "Volver",
-            modifier = Modifier
-                .size(24.dp)
-                .clickable { /*Acción de volver, luego se añade la funcionalidad*/ }
-        )
 
-        Image(
-            painter = painterResource(id = R.drawable.logohorizontal),
-            contentDescription = "Logo",
-            modifier = Modifier
-                .height(24.dp),
-
-            )
-    }
-}
 @Composable
 fun SuccessDialog(onDismiss: () -> Unit) {
     AlertDialog(
