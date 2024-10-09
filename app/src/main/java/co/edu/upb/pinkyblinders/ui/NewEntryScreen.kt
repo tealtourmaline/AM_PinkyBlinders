@@ -68,32 +68,6 @@ fun Navbar() {
 fun SuccessDialog(onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {
-            // Botón "Aceptar"
-            Box(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(170.dp)
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(
-                                Color(0xFFFFC4EB),
-                                Color(0xFFF61067)
-                            )
-                        ),
-                        shape = RoundedCornerShape(20.dp)
-                    )
-                    .clickable(onClick = onDismiss)
-            ) {
-                Text(
-                    text = "Aceptar",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 25.sp,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-        },
         text = {
             Column(
                 modifier = Modifier
@@ -121,17 +95,45 @@ fun SuccessDialog(onDismiss: () -> Unit) {
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
+
+                // Botón "Aceptar" centrado
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center // Centra el botón
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .height(40.dp)
+                            .width(170.dp)
+                            .background(
+                                brush = Brush.verticalGradient(
+                                    colors = listOf(
+                                        Color(0xFFFFC4EB),
+                                        Color(0xFFF61067)
+                                    )
+                                ),
+                                shape = RoundedCornerShape(20.dp)
+                            )
+                            .clickable(onClick = onDismiss)
+                    ) {
+                        Text(
+                            text = "Aceptar",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 25.sp,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
             }
         },
+        confirmButton = {},
         modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.Transparent),
-        shape = RoundedCornerShape(10.dp)
-
+            .fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        containerColor = Color(0xFFFFC4EB),
     )
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
