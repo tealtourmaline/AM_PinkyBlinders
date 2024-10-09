@@ -39,7 +39,7 @@ fun Navbar() {
             painter = painterResource(id = R.drawable.logohorizontal),
             contentDescription = "Logo",
             modifier = Modifier
-                .height(24.dp),
+                .height(28.dp),
 
             )
     }

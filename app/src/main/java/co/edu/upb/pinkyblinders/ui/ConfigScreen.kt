@@ -79,7 +79,7 @@ fun AlertDialogConfig(
                     text = "¿Estás seguro de que quieres eliminar todos tus datos?",
                     color = Color(0xFFF61067),
                     fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     textAlign = TextAlign.Center
                 )
 
