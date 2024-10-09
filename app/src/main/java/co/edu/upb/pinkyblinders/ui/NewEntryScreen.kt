@@ -27,11 +27,16 @@ import co.edu.upb.pinkyblinders.R
 
 @Composable
 fun NewEntryScreen() {
+    var showDialog by remember { mutableStateOf(false) }
+
     Scaffold {
-        NewEntryBodyContent()
+        NewEntryBodyContent(onAcceptClick = { showDialog = true })
+
+        if (showDialog) {
+            SuccessDialog(onDismiss = { showDialog = false })
+        }
     }
 }
-
 @Composable
 fun Navbar() {
     Row(
@@ -56,13 +61,81 @@ fun Navbar() {
             modifier = Modifier
                 .height(24.dp),
 
-        )
+            )
     }
 }
+@Composable
+fun SuccessDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            // Botón "Aceptar"
+            Box(
+                modifier = Modifier
+                    .height(40.dp)
+                    .width(170.dp)
+                    .background(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color(0xFFFFC4EB),
+                                Color(0xFFF61067)
+                            )
+                        ),
+                        shape = RoundedCornerShape(20.dp)
+                    )
+                    .clickable(onClick = onDismiss)
+            ) {
+                Text(
+                    text = "Aceptar",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 25.sp,
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            }
+        },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp) // Añadido para un poco de padding
+                    .background(Color(0xFFFFC4EB), shape = RoundedCornerShape(10.dp)), // Aseguramos el fondo
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                // Imagen "exito.png"
+                Image(
+                    painter = painterResource(id = R.drawable.exito),
+                    contentDescription = "Éxito",
+                    modifier = Modifier.size(100.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Texto "Nota creada"
+                Text(
+                    text = "Nota creada",
+                    color = Color(0xFFF61067),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Transparent),
+        shape = RoundedCornerShape(10.dp)
+
+    )
+}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewEntryBodyContent() {
+fun NewEntryBodyContent(onAcceptClick: () -> Unit) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
@@ -76,7 +149,6 @@ fun NewEntryBodyContent() {
         // Navbar
         Navbar()
 
-
         // Título centrado
         Text(
             modifier = Modifier.padding(16.dp),
@@ -88,10 +160,11 @@ fun NewEntryBodyContent() {
             color = Color(0xFFF61067)
         )
 
-
         // Campo de título
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         ) {
             Text(
                 text = "Titulo",
@@ -123,10 +196,11 @@ fun NewEntryBodyContent() {
             )
         }
 
-
         // Campo de descripción
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         ) {
             Text(
                 text = "Descripcion",
@@ -174,7 +248,7 @@ fun NewEntryBodyContent() {
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
-                .clickable(onClick = { /*Funcionalidad de aceptar, tarea pendiente*/ })
+                .clickable(onClick = onAcceptClick)
         ) {
             Text(
                 text = "Aceptar",
