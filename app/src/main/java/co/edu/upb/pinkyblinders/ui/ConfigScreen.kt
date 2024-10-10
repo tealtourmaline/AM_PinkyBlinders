@@ -1,5 +1,6 @@
 package co.edu.upb.pinkyblinders.ui.theme
 
+import android.annotation.SuppressLint
 import co.edu.upb.pinkyblinders.ui.theme.LobsterTwoFont
 
 
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import co.edu.upb.pinkyblinders.R
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ConfigScreen() {
     var showConfirmationDialog by remember { mutableStateOf(false) }
