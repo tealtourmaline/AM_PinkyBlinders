@@ -23,24 +23,25 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 import co.edu.upb.pinkyblinders.ui.Navbar
 
 @Composable
-fun NewEntryScreen() {
+fun NewEntryScreen(navController: NavController) {
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold {
-        NewEntryBodyContent(onAcceptClick = { showDialog = true })
+        NewEntryBodyContent(onAcceptClick = { showDialog = true }, navController)
 
         if (showDialog) {
-            SuccessDialog(onDismiss = { showDialog = false })
+            SuccessDialog(onDismiss = { showDialog = false }, navController)
         }
     }
 }
 
 @Composable
-fun SuccessDialog(onDismiss: () -> Unit) {
+fun SuccessDialog(onDismiss: () -> Unit, navController: NavController) {
     AlertDialog(
         onDismissRequest = onDismiss,
         text = {
@@ -89,7 +90,9 @@ fun SuccessDialog(onDismiss: () -> Unit) {
                                 ),
                                 shape = RoundedCornerShape(20.dp)
                             )
-                            .clickable(onClick = onDismiss)
+                            .clickable(onClick = {
+                                navController.popBackStack()
+                            })
                     ) {
                         Text(
                             text = "Aceptar",
@@ -112,7 +115,7 @@ fun SuccessDialog(onDismiss: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewEntryBodyContent(onAcceptClick: () -> Unit) {
+fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
 
@@ -124,7 +127,7 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit) {
         verticalArrangement = Arrangement.Top
     ) {
         // Navbar
-        Navbar()
+        Navbar(navController)
 
         // Título centrado
         Text(
@@ -238,8 +241,8 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
+/*@Preview(showBackground = true)
 @Composable
 fun NewEntryScreenPreview() {
     NewEntryScreen()
-}
+}*/

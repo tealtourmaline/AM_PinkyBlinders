@@ -4,6 +4,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import co.edu.upb.pinkyblinders.ui.CreditsScreen
+import co.edu.upb.pinkyblinders.ui.MainScreen
 import co.edu.upb.pinkyblinders.ui.RegisterScreen
 import co.edu.upb.pinkyblinders.ui.SplashScreen
 import co.edu.upb.pinkyblinders.ui.theme.ConfigScreen
@@ -16,25 +18,28 @@ fun AppNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = AppScreens.SplashScreen.route) {
         composable(route = AppScreens.SplashScreen.route) {
-            SplashScreen()
+            SplashScreen(navController)
         }
         composable(route = AppScreens.RegisterScreen.route) {
-            RegisterScreen()
+            RegisterScreen(navController)
         }
         composable(route = AppScreens.NewEntryScreen.route) {
-            NewEntryScreen()
+            NewEntryScreen(navController)
         }
         composable(route = AppScreens.MainScreen.route) {
-            LoginScreen()
+            MainScreen(navController)
         }
         composable(route = AppScreens.LoginScreen.route) {
-            LoginScreen()
+            LoginScreen(navController)
         }
         composable(route = AppScreens.EntryDetailScreen.route) {
-            EntryDetailScreen(null, null, null)
+            EntryDetailScreen(null, null, null, navController)
         }
         composable(route = AppScreens.ConfigScreen.route) {
-            ConfigScreen()
+            ConfigScreen(navController)
+        }
+        composable(route = AppScreens.CreditsScreen.route) {
+            CreditsScreen(navController)
         }
     }
 }

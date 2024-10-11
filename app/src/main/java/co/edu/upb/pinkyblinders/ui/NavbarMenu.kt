@@ -16,11 +16,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 import co.edu.upb.pinkyblinders.ui.theme.LoginScreen
 
 @Composable
-fun NavbarMenu() {
+fun NavbarMenu(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -31,10 +32,12 @@ fun NavbarMenu() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.menu),
-            contentDescription = "Volver",
+            contentDescription = "Opciones",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { /*Acción de volver, luego se añade la funcionalidad*/ }
+                .clickable {
+                    navController.navigate(route = "config_screen")
+                }
         )
 
         Image(

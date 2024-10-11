@@ -25,17 +25,18 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ConfigScreen() {
+fun ConfigScreen(navController: NavController) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
 
     Scaffold {
         ConfigBodyContent(
-            onDeleteDataClick = { showConfirmationDialog = true }
+            onDeleteDataClick = { showConfirmationDialog = true }, navController
         )
     }
 
@@ -52,9 +53,7 @@ fun ConfigScreen() {
 
     // Diálogo de éxito
     if (showSuccessDialog) {
-        SuccessDialogConfig(onDismiss = {
-            showSuccessDialog = false
-        })
+        SuccessDialogConfig(onDismiss = { showSuccessDialog = false }, navController)
     }
 }
 @Composable
@@ -155,7 +154,7 @@ fun AlertDialogConfig(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
+fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavController) {
     var nombre by remember { mutableStateOf("") }
     var pinactual by remember { mutableStateOf("") }
     var pinnuevo by remember { mutableStateOf("") }
@@ -167,7 +166,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Navbar()
+        Navbar(navController)
 
         Text(
             modifier = Modifier.padding(16.dp),
@@ -180,7 +179,9 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
         )
 
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         ) {
             Text(
                 text = "Nombre",
@@ -255,11 +256,15 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
             color = Color(0xFFF61067),
             fontWeight = FontWeight.ExtraBold,
             fontSize = 20.sp,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
         )
 
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         ) {
             Text(
                 text = "Clave actual",
@@ -292,7 +297,9 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
         }
 
         Column(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
         ) {
             Text(
                 text = "Clave nueva",
@@ -349,7 +356,35 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
             )
         }
 
-        Spacer(modifier = Modifier.height(45.dp))
+        Spacer(modifier = Modifier.height(12.dp))
+
+        Box(
+            modifier = Modifier
+                .height(30.dp)
+                .width(140.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFFFC4EB),
+                            Color(0xFFF61067)
+                        )
+                    ),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .clickable(onClick = { /*Funcionalidad de aceptar, tarea pendiente*/ })
+        ) {
+            Text(
+                text = "Creditos",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp,
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .clickable(onClick = {navController.navigate(route = "credits_screen")})
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         Box(
             modifier = Modifier
@@ -379,7 +414,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit) {
 }
 
 @Composable
-fun SuccessDialogConfig(onDismiss: () -> Unit) {
+fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController) {
     AlertDialog(
         containerColor = Color(0xFFFFC4EB),
         onDismissRequest = onDismiss,
@@ -403,7 +438,11 @@ fun SuccessDialogConfig(onDismiss: () -> Unit) {
                             ),
                             shape = RoundedCornerShape(20.dp)
                         )
-                        .clickable(onClick = onDismiss)
+                        .clickable(onClick = {
+                            navController.navigate(route = "register_screen"){
+                                popUpTo(navController.graph.id) { inclusive = true }
+                            }
+                        })
                 ) {
                     Text(
                         text = "Aceptar",
@@ -426,8 +465,8 @@ fun SuccessDialogConfig(onDismiss: () -> Unit) {
         }
     )
 }
-@Preview(showBackground = true, name = "ConfigScreenPreview")
+/*@Preview(showBackground = true, name = "ConfigScreenPreview")
 @Composable
 fun ConfigScreenPreview() {
     ConfigScreen()
-}
+}*/

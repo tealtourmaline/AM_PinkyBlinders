@@ -24,19 +24,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(navController: NavController){
     Scaffold(){
-        LoginBodyContent()
+        LoginBodyContent(navController)
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginBodyContent(){
+fun LoginBodyContent(navController: NavController){
     var pin by remember { mutableStateOf("") }
 
     Box(
@@ -77,6 +78,7 @@ fun LoginBodyContent(){
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp,
                 fontWeight = FontWeight(500),
+                color = Color.Black,
                 modifier = Modifier
                     .width(289.dp)
 
@@ -121,7 +123,9 @@ fun LoginBodyContent(){
                         ),
                         shape = RoundedCornerShape(20.dp)
                     )
-                    .clickable (onClick = { /*TODO*/ })
+                    .clickable (onClick = {
+                        navController.navigate(route = "main_screen")
+                    })
             ){
                 Text(text = "Ingresar",
                     color = Color.White,
@@ -134,8 +138,9 @@ fun LoginBodyContent(){
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview(){
     LoginScreen()
-}
+}*/

@@ -36,20 +36,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 import co.edu.upb.pinkyblinders.ui.theme.LobsterTwoFont
 
 @Composable
-fun RegisterScreen(){
+fun RegisterScreen(navController: NavController){
     Scaffold(){
-        RegisterBodyContent()
+        RegisterBodyContent(navController)
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegisterBodyContent(){
+fun RegisterBodyContent(navController: NavController){
     var nombre by remember { mutableStateOf("") }
     var pin by remember { mutableStateOf("") }
 
@@ -91,6 +92,7 @@ fun RegisterBodyContent(){
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp,
                 fontWeight = FontWeight(500),
+                color = Color.Black,
                 modifier = Modifier
                     .width(289.dp)
 
@@ -122,6 +124,7 @@ fun RegisterBodyContent(){
                 textAlign = TextAlign.Center,
                 fontSize = 25.sp,
                 fontWeight = FontWeight(500),
+                color = Color.Black,
                 modifier = Modifier
                     .width(289.dp)
 
@@ -166,7 +169,9 @@ fun RegisterBodyContent(){
                         ),
                         shape = RoundedCornerShape(20.dp)
                     )
-                    .clickable (onClick = { /*TODO*/ })
+                    .clickable (onClick = {
+                        navController.navigate("login_screen")
+                    })
             ){
                 Text(text = "Continuar",
                     color = Color.White,
@@ -179,8 +184,9 @@ fun RegisterBodyContent(){
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview(){
     RegisterScreen()
-}
+}*/

@@ -15,10 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 
 @Composable
-fun Navbar() {
+fun Navbar(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -32,7 +33,7 @@ fun Navbar() {
             contentDescription = "Volver",
             modifier = Modifier
                 .size(24.dp)
-                .clickable { /*Acción de volver, luego se añade la funcionalidad*/ }
+                .clickable { navController.popBackStack() }
         )
 
         Image(

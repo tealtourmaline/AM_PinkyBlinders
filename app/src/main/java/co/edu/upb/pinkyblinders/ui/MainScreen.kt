@@ -26,27 +26,28 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 import co.edu.upb.pinkyblinders.ui.theme.LobsterTwoFont
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(){
+fun MainScreen(navController: NavController){
     Scaffold(){
-        MainScreenBodyContent()
+        MainScreenBodyContent(navController)
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreenBodyContent(){
+fun MainScreenBodyContent(navController: NavController){
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFFFE4FA))
     ) {
-        NavbarMenu()
+        NavbarMenu(navController)
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -67,7 +68,7 @@ fun MainScreenBodyContent(){
             Spacer(modifier = Modifier.height(20.dp))
 
             for (i in 1..6) {
-                EntryCard("Título $i", "Fecha/de/creación")
+                EntryCard("Título $i", "Fecha/de/creación", navController)
                 Spacer(modifier = Modifier.height(16.dp))
             }
 
@@ -79,17 +80,23 @@ fun MainScreenBodyContent(){
                 contentDescription = "Edit Icon",
                 modifier = Modifier
                     .size(36.dp)
+                    .clickable(onClick = {
+                        navController.navigate(route = "new_entry_screen")
+                    })
             )
         }
     }
 }
 
 @Composable
-fun EntryCard(title: String, creationDate: String) {
+fun EntryCard(title: String, creationDate: String, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(76.dp),
+            .height(76.dp)
+            .clickable (onClick = {
+                navController.navigate(route = "entry_detail_screen")
+            }),
         shape = RoundedCornerShape(21.dp),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFFFC4EB)) // Color de fondo rosa
     ) {
@@ -119,8 +126,9 @@ fun EntryCard(title: String, creationDate: String) {
     }
 }
 
+/*
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview(){
     MainScreen()
-}
+}*/
