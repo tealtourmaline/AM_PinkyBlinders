@@ -40,8 +40,6 @@ fun MainScreen(){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenBodyContent(){
-    var nombre by remember { mutableStateOf("") }
-    var pin by remember { mutableStateOf("") }
 
     Box(
         modifier = Modifier
