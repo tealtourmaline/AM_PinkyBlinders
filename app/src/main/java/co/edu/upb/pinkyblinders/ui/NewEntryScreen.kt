@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import co.edu.upb.pinkyblinders.clases.Entry
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -118,6 +119,7 @@ fun SuccessDialog(onDismiss: () -> Unit, navController: NavController) {
 fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    val entriesList = remember { mutableStateListOf<Entry>() } // Lista para almacenar entradas
 
     Column(
         modifier = Modifier
@@ -129,7 +131,7 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController)
         // Navbar
         Navbar(navController)
 
-        // Título centrado
+        // Título y campos de entrada
         Text(
             modifier = Modifier.padding(16.dp),
             text = "Ingresa una nueva entrada",
@@ -140,7 +142,6 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController)
             color = Color(0xFFF61067)
         )
 
-        // Campo de título
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -168,8 +169,6 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController)
                         color = Color(0xFFF61067),
                         shape = RoundedCornerShape(10.dp)
                     ),
-                visualTransformation = VisualTransformation.None,
-                keyboardOptions = KeyboardOptions.Default,
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent
                 )
@@ -204,8 +203,6 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController)
                         color = Color(0xFFF61067),
                         shape = RoundedCornerShape(10.dp)
                     ),
-                visualTransformation = VisualTransformation.None,
-                keyboardOptions = KeyboardOptions.Default,
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent
                 )
@@ -228,7 +225,16 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController)
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
-                .clickable(onClick = onAcceptClick)
+                .clickable {
+                    // Crear una nueva entrada y agregarla a la lista
+                    val nuevaEntrada = Entry(
+                        titulo = title,
+                        descripcion = description
+                    )
+                    entriesList.add(nuevaEntrada)
+                    println("Nueva entrada creada: $nuevaEntrada") // Debug
+                    onAcceptClick() // Muestra el diálogo de éxito
+                }
         ) {
             Text(
                 text = "Aceptar",
@@ -240,6 +246,7 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController)
         }
     }
 }
+
 
 /*@Preview(showBackground = true)
 @Composable
