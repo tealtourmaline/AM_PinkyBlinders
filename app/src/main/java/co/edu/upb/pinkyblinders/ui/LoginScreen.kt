@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -26,19 +27,30 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
+import co.edu.upb.pinkyblinders.clases.UserPreferences
 
 @Composable
 fun LoginScreen(navController: NavController){
+
+    // Obtiene el contexto y la instancia de UserPreferences
+    val context = LocalContext.current
+    val userPreferences = UserPreferences(context)
+
+    // Obtiene el nombre y el PIN guardados
+    val savedName = userPreferences.getUserName() ?: "Usuario"
+    val savedPin = userPreferences.getUserPin() ?: ""
+
     Scaffold(){
-        LoginBodyContent(navController)
+        LoginBodyContent(navController, savedName, savedPin)
     }
 }
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginBodyContent(navController: NavController){
+fun LoginBodyContent(navController: NavController, nombre: String, savedPin: String){
     var pin by remember { mutableStateOf("") }
+    var pinIncorrecto by remember { mutableStateOf(false) } // Estado para validar el PIN
 
     Box(
         modifier = Modifier
@@ -53,7 +65,7 @@ fun LoginBodyContent(navController: NavController){
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Este es el diario secreto de @nombre",
+                text = "Este es el diario secreto de $nombre",
                 textAlign = TextAlign.Center,
                 fontSize = 35.sp,
                 fontWeight = FontWeight(400),
@@ -108,6 +120,16 @@ fun LoginBodyContent(navController: NavController){
                 )
             )
 
+            // Muestra un mensaje si el PIN es incorrecto
+            if (pinIncorrecto) {
+                Text(
+                    text = "PIN incorrecto. Inténtalo de nuevo.",
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
             Spacer(modifier = Modifier.height(40.dp))
 
             Box(
@@ -124,7 +146,11 @@ fun LoginBodyContent(navController: NavController){
                         shape = RoundedCornerShape(20.dp)
                     )
                     .clickable (onClick = {
-                        navController.navigate(route = "main_screen")
+                        if (pin == savedPin) {
+                            navController.navigate(route = "main_screen")
+                        } else {
+                            pinIncorrecto = true // Marca el PIN como incorrecto
+                        }
                     })
             ){
                 Text(text = "Ingresar",

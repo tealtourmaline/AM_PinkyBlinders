@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
+import co.edu.upb.pinkyblinders.clases.UserPreferences
 import co.edu.upb.pinkyblinders.ui.theme.LobsterTwoFont
 
 @Composable
@@ -53,6 +55,8 @@ fun RegisterScreen(navController: NavController){
 fun RegisterBodyContent(navController: NavController){
     var nombre by remember { mutableStateOf("") }
     var pin by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val userPreferences = UserPreferences(context)
 
     Box(
         modifier = Modifier
@@ -170,6 +174,7 @@ fun RegisterBodyContent(navController: NavController){
                         shape = RoundedCornerShape(20.dp)
                     )
                     .clickable (onClick = {
+                        userPreferences.saveUserData(nombre, pin)
                         navController.navigate("login_screen")
                     })
             ){

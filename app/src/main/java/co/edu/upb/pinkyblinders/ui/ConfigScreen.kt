@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
@@ -27,12 +28,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
+import co.edu.upb.pinkyblinders.clases.UserPreferences
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ConfigScreen(navController: NavController) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val userPreferences = UserPreferences(context)
 
     Scaffold {
         ConfigBodyContent(
@@ -53,7 +58,7 @@ fun ConfigScreen(navController: NavController) {
 
     // Diálogo de éxito
     if (showSuccessDialog) {
-        SuccessDialogConfig(onDismiss = { showSuccessDialog = false }, navController)
+        SuccessDialogConfig(onDismiss = { showSuccessDialog = false }, navController, userPreferences)
     }
 }
 @Composable
@@ -414,7 +419,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavControlle
 }
 
 @Composable
-fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController) {
+fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController, userPreferences: UserPreferences) {
     AlertDialog(
         containerColor = Color(0xFFFFC4EB),
         onDismissRequest = onDismiss,
@@ -439,6 +444,9 @@ fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController) {
                             shape = RoundedCornerShape(20.dp)
                         )
                         .clickable(onClick = {
+
+                            userPreferences.clearUserData()
+
                             navController.navigate(route = "register_screen"){
                                 popUpTo(navController.graph.id) { inclusive = true }
                             }
