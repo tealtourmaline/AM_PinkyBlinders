@@ -1,6 +1,7 @@
 package co.edu.upb.pinkyblinders.ui.theme
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import co.edu.upb.pinkyblinders.ui.theme.LobsterTwoFont
 
 
@@ -37,6 +38,7 @@ fun ConfigScreen(navController: NavController) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
     var showSuccessDialog2 by remember { mutableStateOf(false) }
+    var showSuccessDialog3 by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val userPreferences = UserPreferences(context)
@@ -44,21 +46,41 @@ fun ConfigScreen(navController: NavController) {
 
     // Obtenemos el nombre del usuario al cargar la pantalla
     var nombre by remember { mutableStateOf(userPreferences.getUserName() ?: "") }
+    var pinActual by remember { mutableStateOf("") }  // Inicia como cadena vacía
+    var pinNuevo by remember { mutableStateOf("") }   // Inicia como cadena vacía
 
     Scaffold {
         ConfigBodyContent(
             nombre = nombre,
+            pinActual = pinActual,
+            pinNuevo = pinNuevo,
             onNombreChange = { nombre = it }, // Permitir la edición del nombre
             onAceptarClick = {
                 // Guardamos el nuevo nombre cuando se hace clic en "Aceptar"
                 userPreferences.saveUserData(name = nombre, pin = userPreferences.getUserPin() ?: "")
                 showSuccessDialog2 = true
             },
+            onPinActualChange = { pinActual = it },
+            onPinNuevoChange = { pinNuevo = it },
+            onCambiarPinClick = {
+                // Verificar que el PIN actual coincida con el almacenado
+                if (pinActual == userPreferences.getUserPin()) {
+                    // Si coincide, guardar el nuevo PIN
+                    userPreferences.saveUserData(
+                        name = nombre,
+                        pin = pinNuevo,
+                    )
+                    showSuccessDialog3 = true // Mostrar éxito
+                } else {
+                    // Manejar el error de PIN incorrecto
+                    Toast.makeText(context, "PIN actual incorrecto", Toast.LENGTH_LONG).show()
+                }
+            },
             onDeleteDataClick = { showConfirmationDialog = true },
-            navController = navController
-        )
-    }
+            navController = navController,
 
+            )
+    }
     // Diálogo de confirmación
     if (showConfirmationDialog) {
         AlertDialogConfig(
@@ -78,8 +100,11 @@ fun ConfigScreen(navController: NavController) {
     if (showSuccessDialog2) {
         SuccessDialogConfig2(onDismiss = { showSuccessDialog2 = false }, navController, userPreferences)
     }
-}
 
+    if (showSuccessDialog3) {
+        SuccessDialogConfig3(onDismiss = { showSuccessDialog3 = false }, navController, userPreferences)
+    }
+}
 
 @Composable
 fun AlertDialogConfig(
@@ -181,13 +206,16 @@ fun AlertDialogConfig(
 @Composable
 fun ConfigBodyContent(
     nombre: String,
+    pinActual: String,
+    pinNuevo: String,
     onNombreChange: (String) -> Unit,
     onAceptarClick: () -> Unit,
+    onPinActualChange: (String) -> Unit,
+    onPinNuevoChange: (String) -> Unit,
+    onCambiarPinClick: () -> Unit,
     onDeleteDataClick: () -> Unit,
     navController: NavController
 ) {
-    var pinactual by remember { mutableStateOf("") }
-    var pinnuevo by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -310,8 +338,8 @@ fun ConfigBodyContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = pinactual,
-                onValueChange = { pinactual = it },
+                value = pinActual,
+                onValueChange = onPinActualChange,
                 label = { Text("Ingresa aquí tu clave actual") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -345,8 +373,8 @@ fun ConfigBodyContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             TextField(
-                value = pinnuevo,
-                onValueChange = { pinnuevo = it },
+                value = pinNuevo,
+                onValueChange = onPinNuevoChange,
                 label = { Text("Ingresa aquí tu clave nueva") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -378,7 +406,7 @@ fun ConfigBodyContent(
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
-                .clickable(onClick = { /*Funcionalidad de aceptar, tarea pendiente*/ })
+                .clickable(onClick = onCambiarPinClick)
         ) {
             Text(
                 text = "Aceptar",
@@ -389,7 +417,7 @@ fun ConfigBodyContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Box(
             modifier = Modifier
@@ -417,7 +445,7 @@ fun ConfigBodyContent(
             )
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Box(
             modifier = Modifier
@@ -502,6 +530,56 @@ fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController, use
     )
 }
 @Composable
+fun SuccessDialogConfig3(onDismiss: () -> Unit, navController: NavController, userPreferences: UserPreferences) {
+    AlertDialog(
+        containerColor = Color(0xFFFFC4EB),
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly // Espacio uniforme entre los botones
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(170.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFFFFC4EB),
+                                    Color(0xFFF61067)
+                                )
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .clickable(onClick = {
+                            navController.navigate(route = "login_screen")
+                        })
+                ) {
+                    Text(
+                        text = "Aceptar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        },
+        text = {
+            Text(
+                text = "Pin cambiado exitosamente",
+                color = Color(0xFFF61067),
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+    )
+}
+@Composable
 fun SuccessDialogConfig2(onDismiss: () -> Unit, navController: NavController, userPreferences: UserPreferences) {
     AlertDialog(
         containerColor = Color(0xFFFFC4EB),
@@ -551,6 +629,7 @@ fun SuccessDialogConfig2(onDismiss: () -> Unit, navController: NavController, us
         }
     )
 }
+
 
 /*@Preview(showBackground = true, name = "ConfigScreenPreview")
 @Composable
