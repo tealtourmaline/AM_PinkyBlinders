@@ -45,12 +45,27 @@ class EntryPreferences(context: Context) {
             saveEntries(entries) // Guarda la lista actualizada
         }
 
+    }
+    // Editar una entrada por ID
+    fun editEntryById(id: String, newTitle: String?, newDescription: String?, newDate: String?) {
+        val entries = getEntries().toMutableList() // Obtiene la lista de entradas
+        val entryToEdit = entries.find { it.id == id } // Encuentra la entrada por ID
+
+        entryToEdit?.let {
+            // Si la entrada existe, modifica sus propiedades
+            it.titulo = newTitle ?: it.titulo
+            it.descripcion = newDescription ?: it.descripcion
+            it.fechaCreacion = newDate ?: it.fechaCreacion
+
+            // Guarda la lista actualizada
+            saveEntries(entries)
+        }
+    }
 
 
-        // Limpiar entradas
+    // Limpiar entradas
         fun clearEntries() {
             prefs.edit().remove("entry_list").apply()
         }
 
     }
-}

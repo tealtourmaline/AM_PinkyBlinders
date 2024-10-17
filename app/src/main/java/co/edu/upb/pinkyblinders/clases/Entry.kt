@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter
 
 data class Entry(
     val id: String = UUID.randomUUID().toString(),
-    val titulo: String,
-    val descripcion: String,
-    val fechaCreacion: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+    var titulo: String,
+    var descripcion: String,
+    var fechaCreacion: String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 )

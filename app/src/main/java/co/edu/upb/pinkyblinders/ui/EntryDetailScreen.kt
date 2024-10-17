@@ -98,7 +98,8 @@ fun EntryDetailBodyContent(fecha: String?,
                     modifier = Modifier
                         .size(30.dp)
                         .clickable {
-                            // pendiente: programar el editar
+                            navController.navigate("edit_entry_screen" + "/${entryId}")
+
                         }
                 )
 

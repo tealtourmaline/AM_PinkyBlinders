@@ -14,6 +14,7 @@ import co.edu.upb.pinkyblinders.ui.MainScreen
 import co.edu.upb.pinkyblinders.ui.RegisterScreen
 import co.edu.upb.pinkyblinders.clases.EntryPreferences
 import co.edu.upb.pinkyblinders.ui.SplashScreen
+import co.edu.upb.pinkyblinders.ui.theme.EditEntryScreen
 import co.edu.upb.pinkyblinders.ui.theme.ConfigScreen
 import co.edu.upb.pinkyblinders.ui.theme.EntryDetailScreen
 import co.edu.upb.pinkyblinders.ui.theme.LoginScreen
@@ -49,6 +50,19 @@ fun AppNavigation(context: Context) {
         composable(route = AppScreens.LoginScreen.route) {
             LoginScreen(navController)
         }
+        composable(route = AppScreens.EditEntryScreen.route + "/{entryId}") { backStackEntry ->
+            val entryId = backStackEntry.arguments?.getString("entryId")
+            val entryPreferences = EntryPreferences(context) // Obtén el contexto adecuado
+
+            if (entryId != null) {
+                EditEntryScreen(
+                    entryId = entryId,
+                    entryPreferences = entryPreferences,
+                    navController = navController
+                )
+            }
+        }
+
         composable(route = AppScreens.EntryDetailScreen.route + "/{entryId}") { backStackEntry ->
             val entryId = backStackEntry.arguments?.getString("entryId")
             val entryPreferences = EntryPreferences(context) // Asegúrate de tener el contexto adecuado
