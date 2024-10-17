@@ -29,6 +29,13 @@ class EntryPreferences(context: Context) {
             emptyList() // Retorna una lista vacía si no hay datos
         }
     }
+    // Obtener entrada por ID
+    fun getEntryById(id: String): Entry? {
+        val entries = getEntries() // Obtiene la lista de entradas
+        return entries.find { it.id == id } // Busca la entrada por ID
+    }
+
+
 
     // Limpiar entradas
     fun clearEntries() {

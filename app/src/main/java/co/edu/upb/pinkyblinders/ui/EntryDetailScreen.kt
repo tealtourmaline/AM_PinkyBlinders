@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import co.edu.upb.pinkyblinders.clases.EntryPreferences
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,12 +24,16 @@ import co.edu.upb.pinkyblinders.ui.Navbar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun EntryDetailScreen(titulo: String?, fecha: String?, descripcion: String?, navController: NavController) {
+fun EntryDetailScreen(entryId: String?, entryPreferences: EntryPreferences, navController: NavController) {
+    // Obtenemos los datos de la entrada usando EntryPreferences
+    val entry = entryId?.let { entryPreferences.getEntryById(it) }
+
+    // Llamamos a EntryDetailBodyContent pasando los datos de la entrada
     Scaffold {
         EntryDetailBodyContent(
-            titulo = titulo,
-            fecha = fecha,
-            descripcion = descripcion,
+            titulo = entry?.titulo,
+            fecha = entry?.fechaCreacion,
+            descripcion = entry?.descripcion,
             navController = navController
         )
     }
