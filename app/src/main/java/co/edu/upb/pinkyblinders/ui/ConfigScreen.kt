@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
+import co.edu.upb.pinkyblinders.clases.EntryPreferences
 import co.edu.upb.pinkyblinders.clases.UserPreferences
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -35,13 +36,26 @@ import co.edu.upb.pinkyblinders.clases.UserPreferences
 fun ConfigScreen(navController: NavController) {
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var showSuccessDialog by remember { mutableStateOf(false) }
+    var showSuccessDialog2 by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
     val userPreferences = UserPreferences(context)
+    val entryPreferences = EntryPreferences(context)
+
+    // Obtenemos el nombre del usuario al cargar la pantalla
+    var nombre by remember { mutableStateOf(userPreferences.getUserName() ?: "") }
 
     Scaffold {
         ConfigBodyContent(
-            onDeleteDataClick = { showConfirmationDialog = true }, navController
+            nombre = nombre,
+            onNombreChange = { nombre = it }, // Permitir la edición del nombre
+            onAceptarClick = {
+                // Guardamos el nuevo nombre cuando se hace clic en "Aceptar"
+                userPreferences.saveUserData(name = nombre, pin = userPreferences.getUserPin() ?: "")
+                showSuccessDialog2 = true
+            },
+            onDeleteDataClick = { showConfirmationDialog = true },
+            navController = navController
         )
     }
 
@@ -58,9 +72,15 @@ fun ConfigScreen(navController: NavController) {
 
     // Diálogo de éxito
     if (showSuccessDialog) {
-        SuccessDialogConfig(onDismiss = { showSuccessDialog = false }, navController, userPreferences)
+        SuccessDialogConfig(onDismiss = { showSuccessDialog = false }, navController, userPreferences, entryPreferences)
+    }
+    // Diálogo de éxito 2
+    if (showSuccessDialog2) {
+        SuccessDialogConfig2(onDismiss = { showSuccessDialog2 = false }, navController, userPreferences)
     }
 }
+
+
 @Composable
 fun AlertDialogConfig(
     onDismiss: () -> Unit,
@@ -159,8 +179,13 @@ fun AlertDialogConfig(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavController) {
-    var nombre by remember { mutableStateOf("") }
+fun ConfigBodyContent(
+    nombre: String,
+    onNombreChange: (String) -> Unit,
+    onAceptarClick: () -> Unit,
+    onDeleteDataClick: () -> Unit,
+    navController: NavController
+) {
     var pinactual by remember { mutableStateOf("") }
     var pinnuevo by remember { mutableStateOf("") }
 
@@ -198,9 +223,10 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavControlle
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Campo para editar el nombre del usuario
             TextField(
                 value = nombre,
-                onValueChange = { nombre = it },
+                onValueChange = onNombreChange,
                 label = { Text("Nombre del usuario") },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -220,7 +246,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavControlle
                         painter = painterResource(id = R.drawable.editar),
                         contentDescription = "Editar",
                         modifier = Modifier
-                            .clickable { /* Acción de editar */ }
+                            .clickable { /* Ya se puede editar el campo */ }
                             .size(24.dp),
                         tint = Color(0xFFF61067)
                     )
@@ -230,6 +256,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavControlle
 
         Spacer(modifier = Modifier.height(20.dp))
 
+        // Botón Aceptar para guardar el nombre editado
         Box(
             modifier = Modifier
                 .height(40.dp)
@@ -243,7 +270,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavControlle
                     ),
                     shape = RoundedCornerShape(20.dp)
                 )
-                .clickable(onClick = { /*Funcionalidad de aceptar, tarea pendiente*/ })
+                .clickable(onClick = onAceptarClick) // Llamamos a la función onAceptarClick
         ) {
             Text(
                 text = "Aceptar",
@@ -253,6 +280,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavControlle
                 modifier = Modifier.align(Alignment.Center)
             )
         }
+
 
         Spacer(modifier = Modifier.height(14.dp))
 
@@ -419,7 +447,7 @@ fun ConfigBodyContent(onDeleteDataClick: () -> Unit, navController: NavControlle
 }
 
 @Composable
-fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController, userPreferences: UserPreferences) {
+fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController, userPreferences: UserPreferences, entryPreferences: EntryPreferences) {
     AlertDialog(
         containerColor = Color(0xFFFFC4EB),
         onDismissRequest = onDismiss,
@@ -446,7 +474,7 @@ fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController, use
                         .clickable(onClick = {
 
                             userPreferences.clearUserData()
-
+                            entryPreferences.clearEntries()
                             navController.navigate(route = "register_screen"){
                                 popUpTo(navController.graph.id) { inclusive = true }
                             }
@@ -473,6 +501,57 @@ fun SuccessDialogConfig(onDismiss: () -> Unit, navController: NavController, use
         }
     )
 }
+@Composable
+fun SuccessDialogConfig2(onDismiss: () -> Unit, navController: NavController, userPreferences: UserPreferences) {
+    AlertDialog(
+        containerColor = Color(0xFFFFC4EB),
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly // Espacio uniforme entre los botones
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(170.dp)
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color(0xFFFFC4EB),
+                                    Color(0xFFF61067)
+                                )
+                            ),
+                            shape = RoundedCornerShape(20.dp)
+                        )
+                        .clickable(onClick = {
+                            navController.navigate(route = "config_screen")
+                        })
+                ) {
+                    Text(
+                        text = "Aceptar",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 25.sp,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+            }
+        },
+        text = {
+            Text(
+                text = "Nombre cambiado exitosamente",
+                color = Color(0xFFF61067),
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center
+            )
+        }
+    )
+}
+
 /*@Preview(showBackground = true, name = "ConfigScreenPreview")
 @Composable
 fun ConfigScreenPreview() {

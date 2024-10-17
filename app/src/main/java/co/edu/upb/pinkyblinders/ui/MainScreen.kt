@@ -59,7 +59,7 @@ fun MainScreenBodyContent(navController: NavController, entriesList: List<Entry>
         Column(
             modifier = Modifier
                 .weight(1f)
-                .padding(50.dp)
+                .padding(40.dp)
                 .verticalScroll(scrollState),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top
@@ -68,7 +68,7 @@ fun MainScreenBodyContent(navController: NavController, entriesList: List<Entry>
                 text = "Mis entradas",
                 textAlign = TextAlign.Center,
                 fontSize = 35.sp,
-                fontWeight = FontWeight(400),
+                fontWeight = FontWeight.Bold,
                 fontFamily = LobsterTwoFont,
                 color = Color(0xFFF61067)
             )
