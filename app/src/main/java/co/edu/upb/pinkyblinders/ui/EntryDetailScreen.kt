@@ -34,6 +34,8 @@ fun EntryDetailScreen(entryId: String?, entryPreferences: EntryPreferences, navC
             titulo = entry?.titulo,
             fecha = entry?.fechaCreacion,
             descripcion = entry?.descripcion,
+            entryId = entryId,
+            entryPreferences = entryPreferences,
             navController = navController
         )
     }
@@ -44,11 +46,12 @@ fun EntryDetailScreen(entryId: String?, entryPreferences: EntryPreferences, navC
 fun EntryDetailBodyContent(fecha: String?,
                            titulo: String?,
                            descripcion: String?,
+                           entryId: String?,
+                           entryPreferences: EntryPreferences,
                            navController: NavController) {
-    val defaultFecha = "Fecha/de/entrada"
-    val defaultTitulo = "Título de la entrada"
-    val defaultDescripcion = "Este es un ejemplo de una entrada de diario. Aquí puedes escribir todo lo que te ha sucedido hoy, tus pensamientos y cómo te has sentido a lo largo del día. Este espacio está diseñado para que puedas reflexionar sobre tus experiencias, grandes o pequeñas, y sobre cómo estas te han impactado. Tal vez tu día ha sido tranquilo y has disfrutado de pequeños momentos de paz, o quizás ha sido más agitado, lleno de retos y emociones intensas. No importa qué tipo de día hayas tenido, este es un lugar seguro para desahogarte y expresar todo lo que llevas dentro.\n\nEste diario también puede ser un buen lugar para reflexionar sobre tus metas, lo que te gustaría alcanzar en los próximos días o semanas, y cómo te sientes con respecto a tu progreso. Tómate el tiempo para escribir con calma, sin prisa, y aprovecha este momento para conectar contigo mismo."
-
+    val defaultFecha = ""
+    val defaultTitulo = ""
+    val defaultDescripcion = ""
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -105,7 +108,11 @@ fun EntryDetailBodyContent(fecha: String?,
                     modifier = Modifier
                         .size(30.dp) //
                         .clickable {
-                            // pendiente: programar el eliminar
+                            // Eliminar la entrada
+                            entryId?.let { entryPreferences.deleteEntryById(it) }
+                            // Regresar a la pantalla anterior
+                            navController.popBackStack()
+
                         }
                 )
             }

@@ -7,7 +7,8 @@ import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
 
 class EntryPreferences(context: Context) {
-    private val prefs: SharedPreferences = context.getSharedPreferences("entry_prefs", Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences("entry_prefs", Context.MODE_PRIVATE)
     private val gson = Gson()
 
     // Guardar lista de entradas
@@ -29,16 +30,27 @@ class EntryPreferences(context: Context) {
             emptyList() // Retorna una lista vacía si no hay datos
         }
     }
+
     // Obtener entrada por ID
     fun getEntryById(id: String): Entry? {
         val entries = getEntries() // Obtiene la lista de entradas
         return entries.find { it.id == id } // Busca la entrada por ID
     }
 
+    fun deleteEntryById(id: String) {
+        val entries = getEntries().toMutableList() // Obtiene la lista de entradas
+        val entryToDelete = entries.find { it.id == id }
+        entryToDelete?.let {
+            entries.remove(it) // Elimina la entrada encontrada
+            saveEntries(entries) // Guarda la lista actualizada
+        }
 
 
-    // Limpiar entradas
-    fun clearEntries() {
-        prefs.edit().remove("entry_list").apply()
+
+        // Limpiar entradas
+        fun clearEntries() {
+            prefs.edit().remove("entry_list").apply()
+        }
+
     }
 }
