@@ -42,7 +42,7 @@ fun MainScreenBodyContent(navController: NavController, entriesList: List<Entry>
     val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier.fillMaxSize() // Llenar todo el espacio
+        modifier = Modifier.fillMaxSize()
     ) {
         NavbarMenu(navController)
 
@@ -76,9 +76,7 @@ fun MainScreenBodyContent(navController: NavController, entriesList: List<Entry>
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Verificar si hay entradas
             if (entriesList.isEmpty()) {
-                // Mensaje centrado si no hay entradas
                 Text(
                     text = "No hay entradas disponibles.",
                     fontSize = 20.sp,
@@ -86,9 +84,8 @@ fun MainScreenBodyContent(navController: NavController, entriesList: List<Entry>
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
             } else {
-                // Mostrar las entradas
                 entriesList.forEach { entry ->
-                    EntryCard(entry, navController) // Pasando el objeto entry completo
+                    EntryCard(entry, navController)
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
@@ -137,4 +134,5 @@ fun EntryCard(entry: Entry, navController: NavController) {
         }
     }
 }
+
 

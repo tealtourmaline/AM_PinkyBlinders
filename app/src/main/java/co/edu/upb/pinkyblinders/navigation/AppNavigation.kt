@@ -37,9 +37,18 @@ fun AppNavigation() {
         composable(route = AppScreens.LoginScreen.route) {
             LoginScreen(navController)
         }
-        composable(route = AppScreens.EntryDetailScreen.route) {
-            EntryDetailScreen(null, null, null, navController)
+        composable(route = AppScreens.EntryDetailScreen.route + "/{entryId}") { backStackEntry ->
+            val entryId = backStackEntry.arguments?.getString("entryId")
+            // Busca la entrada correspondiente en la lista usando el entryId
+            val entry = entriesList.find { it.id == entryId }
+            EntryDetailScreen(
+                titulo = entry?.titulo,
+                fecha = entry?.fechaCreacion,
+                descripcion = entry?.descripcion,
+                navController = navController
+            )
         }
+
         composable(route = AppScreens.ConfigScreen.route) {
             ConfigScreen(navController)
         }

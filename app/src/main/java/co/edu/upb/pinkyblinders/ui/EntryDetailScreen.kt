@@ -7,26 +7,19 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import co.edu.upb.pinkyblinders.ui.Navbar
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
+import co.edu.upb.pinkyblinders.ui.Navbar
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -40,7 +33,6 @@ fun EntryDetailScreen(titulo: String?, fecha: String?, descripcion: String?, nav
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,12 +51,10 @@ fun EntryDetailBodyContent(fecha: String?,
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
-        // Navbar
         Navbar(navController)
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        //Fecha
         Text(
             modifier = Modifier.padding(start = 16.dp),
             text = fecha ?: defaultFecha,
@@ -74,16 +64,14 @@ fun EntryDetailBodyContent(fecha: String?,
         )
         Spacer(modifier = Modifier.height(10.dp))
 
-
-        //Título
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween // Espacio entre el título y los iconos
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Título
+
             Text(
                 text = titulo ?: defaultTitulo,
                 fontSize = 36.sp,
@@ -92,7 +80,7 @@ fun EntryDetailBodyContent(fecha: String?,
                 color = Color(0xFFF61067)
             )
 
-            // Iconos de editar y eliminar
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -118,7 +106,6 @@ fun EntryDetailBodyContent(fecha: String?,
             }
         }
 
-        //Texto de la entrada
         Text(
             modifier = Modifier.padding(25.dp),
             text = descripcion ?: defaultDescripcion,
@@ -126,13 +113,6 @@ fun EntryDetailBodyContent(fecha: String?,
             fontSize = 19.sp,
             color = Color.Black
         )
-
-
     }
 }
 
-/*@Preview(showBackground = true)
-@Composable
-fun EntryDetailScreenPreview() {
-    EntryDetailScreen(titulo = null, fecha = null, descripcion = null)
-}*/
