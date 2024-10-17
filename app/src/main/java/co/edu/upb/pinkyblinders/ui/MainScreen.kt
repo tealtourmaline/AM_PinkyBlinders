@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import co.edu.upb.pinkyblinders.clases.EntryPreferences
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,12 +26,20 @@ import co.edu.upb.pinkyblinders.ui.theme.LobsterTwoFont
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.rememberScrollState
-
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavController, entriesList: List<Entry>) {
+fun MainScreen(navController: NavController, entryPreferences: EntryPreferences) {
+    val entriesList = remember { mutableStateListOf<Entry>() }
+    // Cargar las entradas guardadas al iniciar
+    LaunchedEffect(Unit) {
+        entriesList.addAll(entryPreferences.getEntries())
+    }
+
     Scaffold(containerColor = Color(0xFFFFE4FA)) {
         MainScreenBodyContent(navController, entriesList)
     }

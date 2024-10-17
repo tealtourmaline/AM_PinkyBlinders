@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import co.edu.upb.pinkyblinders.navigation.AppNavigation
 import co.edu.upb.pinkyblinders.ui.theme.PinkyBlindersTheme
@@ -20,25 +21,20 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PinkyBlindersTheme {
-                AppNavigation()
+                // Pasa el contexto a AppNavigation
+                AppNavigation(context = this)
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     PinkyBlindersTheme {
-        AppNavigation()
+        // Pasa el contexto a AppNavigation en la previsualización
+        AppNavigation(context = LocalContext.current)
+
     }
 }
 

@@ -19,6 +19,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import co.edu.upb.pinkyblinders.clases.EntryPreferences
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -32,11 +33,24 @@ import java.util.UUID
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun NewEntryScreen(navController: NavController, entriesList: MutableList<Entry>) {
+fun NewEntryScreen(navController: NavController, entryPreferences: EntryPreferences) {
     var showDialog by remember { mutableStateOf(false) }
+    val entriesList = remember { mutableStateListOf<Entry>() }
+    // Cargar las entradas guardadas al iniciar
+    LaunchedEffect(Unit) {
+        entriesList.addAll(entryPreferences.getEntries())
+    }
 
     Scaffold {
-        NewEntryBodyContent(onAcceptClick = { showDialog = true }, navController, entriesList)
+        NewEntryBodyContent(
+            onAcceptClick = {
+                // Guardar entradas en SharedPreferences
+                entryPreferences.saveEntries(entriesList)
+                showDialog = true
+            },
+            navController,
+            entriesList
+        )
 
         if (showDialog) {
             SuccessDialog(onDismiss = { showDialog = false }, navController)
