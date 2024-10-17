@@ -1,5 +1,6 @@
 package co.edu.upb.pinkyblinders.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.background
@@ -24,8 +25,12 @@ import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 import co.edu.upb.pinkyblinders.clases.Entry
 import co.edu.upb.pinkyblinders.ui.Navbar
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.UUID
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun NewEntryScreen(navController: NavController, entriesList: MutableList<Entry>) {
     var showDialog by remember { mutableStateOf(false) }
@@ -202,22 +207,45 @@ fun NewEntryBodyContent(onAcceptClick: () -> Unit, navController: NavController,
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Icon(
-            painter = painterResource(id = android.R.drawable.ic_input_add), // Ícono del sistema
-            contentDescription = "Aceptar",
+        Box(
             modifier = Modifier
-                .size(36.dp)
-                .clickable(onClick = {
+                .height(40.dp)
+                .width(170.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color(0xFFFFC4EB),
+                            Color(0xFFF61067)
+                        )
+                    ),
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .clickable {
+                    val currentDateTime = LocalDateTime.now()
+                    val zonedDateTime = currentDateTime.atZone(ZoneId.of("UTC"))
+                    val utcMinus5 = zonedDateTime.withZoneSameInstant(ZoneId.of("America/Bogota"))
+                    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                    val formattedDate = utcMinus5.format(formatter)
+
                     val newEntry = Entry(
                         id = UUID.randomUUID().toString(),
                         titulo = title,
                         descripcion = description,
-                        fechaCreacion = "Hoy"
+                        fechaCreacion = formattedDate
                     )
                     entriesList.add(newEntry)
                     onAcceptClick()
-                })
-        )
+                }
+        ) {
+            Text(
+                text = "Aceptar",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 25.sp,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
 
     }
 }

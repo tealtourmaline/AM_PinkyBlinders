@@ -1,5 +1,6 @@
 package co.edu.upb.pinkyblinders.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.border
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import co.edu.upb.pinkyblinders.R
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun EntryDetailScreen(titulo: String?, fecha: String?, descripcion: String?, navController: NavController) {
     Scaffold {
